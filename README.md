@@ -1,6 +1,7 @@
 # PNM Convertor
+[![npm version](https://badge.fury.io/js/pnm-convertor.svg)](https://badge.fury.io/js/pnm-convertor)
 
-This is a simple function to convert `.pbm`, `.pgm.` or `.ppm` file to image format (The default format type is `image/png`).
+Simple `promise` function to convert `.pbm`, `.pgm.` or `.ppm` file to image format (The default format type is `image/png`).
 
 ## Installation
 
