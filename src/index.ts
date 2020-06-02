@@ -52,24 +52,7 @@ function parseNetPBM(buffer: ArrayBuffer): NET_PBM_INTERFACE {
   function getByte() {
     return rawData[byteOffset++];
   }
-
-  function getBit() {
-    let ans = 0;
-    let bitStr = '';
-    if (bitOffset === 0) {
-      var b = getByte();
-      if (b === undefined) {
-        // EOF?
-        return b;
-      }
-      bitStr = toBin(b);
-    }
-    if (bitStr.charAt(bitOffset) === '1') {
-      ans = 1;
-    }
-    bitOffset = (bitOffset + 1) % 8;
-    return ans;
-  }
+  
   const getPixelData = (
     type: PNMType,
     width: number,
@@ -91,14 +74,14 @@ function parseNetPBM(buffer: ArrayBuffer): NET_PBM_INTERFACE {
           }
           break;
         case 'P4':
-          for (let i = 0; i < total; i++) {
-            pixelValue = 255 * Math.abs(getBit() - 1);
-            data[i * 4] = pixelValue;
-            data[i * 4 + 1] = pixelValue;
-            data[i * 4 + 2] = pixelValue;
-            data[i * 4 + 3] = 255;
-            if (i > 0 && i % (width * 4) === 0) {
-              bitOffset = 0;
+          for (let i = 0; i < total; i+=8) {
+            const byte = getByte();
+            for(let j = 7; j >= 0 && (i + 7 - j) < total; j--) {
+              pixelValue = Math.abs(((byte & (0b1 << j)) >> j) - 1) * 255;
+              data[(i + 7 - j) * 4] = pixelValue;
+              data[(i + 7 - j) * 4 + 1] = pixelValue;
+              data[(i + 7 - j) * 4 + 2] = pixelValue;
+              data[(i + 7 - j) * 4 + 3] = 255;
             }
           }
           break;
