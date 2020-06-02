@@ -8,7 +8,9 @@
   "type": "dist/index.d.ts",
   "main": "bundle.min.js",
   "scripts": {
-    "build": "rimraf dist/ && rollup -c"
+    "clean": "rimraf -rf ./dist",
+    "build": "yarn clean && rollup -c",
+    "dev": "yarn clean && rollup -wc"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
